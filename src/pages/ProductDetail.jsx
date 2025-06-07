@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { products } from '../data/products'; // Import the static data
 import { useCart } from '../contexts/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -14,20 +14,14 @@ function ProductDetail() {
     const [imageError, setImageError] = useState(false);
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(`http://localhost:3001/products/${id}`);
-                setProduct(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError('Product not found or failed to load.');
-                setLoading(false);
-                console.error('Error fetching product:', err);
-            }
-        };
-
-        fetchProduct();
+        // Find the product from static data
+        const foundProduct = products.find(p => p.id === parseInt(id));
+        if (foundProduct) {
+            setProduct(foundProduct);
+        } else {
+            setError('Product not found');
+        }
+        setLoading(false);
     }, [id]);
 
     const handleImageError = () => {

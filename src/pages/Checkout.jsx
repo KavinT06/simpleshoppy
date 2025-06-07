@@ -64,28 +64,24 @@ function Checkout() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
         if (!validateForm()) {
             return;
         }
-
+        
         setLoading(true);
-
+        
         try {
-            // Send order to backend
-            await axios.post('http://localhost:3001/checkout', {
-                customer: formData,
-                items: cart,
-                total: getTotal()
-            });
-
+            // Simulate API call with a timeout
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
             setSubmitStatus({ success: true, error: null });
             clearCart();
         } catch (err) {
             console.error('Error submitting order:', err);
-            setSubmitStatus({
-                success: false,
-                error: 'There was a problem processing your order. Please try again.'
+            setSubmitStatus({ 
+                success: false, 
+                error: 'There was a problem processing your order. Please try again.' 
             });
         } finally {
             setLoading(false);

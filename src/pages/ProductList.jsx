@@ -1,39 +1,24 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { products } from '../data/products'; // Import the static data
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 function ProductList() {
-    const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setLoading(true);
-                // You can replace this with your actual API endpoint
-                const response = await axios.get('http://localhost:3001/products');
-                setProducts(response.data);
-                setFilteredProducts(response.data);
-                
-                // Extract unique categories
-                const uniqueCategories = [...new Set(response.data.map(product => product.category))];
-                setCategories(uniqueCategories);
-                
-                setLoading(false);
-            } catch (err) {
-                setError('Failed to fetch products. Please try again later.');
-                setLoading(false);
-                console.error('Error fetching products:', err);
-            }
-        };
-
-        fetchProducts();
+        // Use the static data instead of fetching
+        setFilteredProducts(products);
+        
+        // Extract unique categories
+        const uniqueCategories = [...new Set(products.map(product => product.category))];
+        setCategories(uniqueCategories);
+        
+        setLoading(false);
     }, []);
 
     // Filter products based on search term and category
@@ -57,16 +42,6 @@ function ProductList() {
 
     if (loading) return <LoadingSpinner />;
     
-    if (error) {
-        return (
-            <div className="container mx-auto p-4">
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                    <p>{error}</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-6">Products</h1>
